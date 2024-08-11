@@ -1,6 +1,11 @@
-let scene, camera, renderer, textMesh, font;
+let scene, camera, renderer, textMesh, font, textMaterial;
 const container = document.getElementById('container');
 const inputText = document.getElementById('inputText');
+const colorPicker = document.getElementById('colorPicker');
+const modeToggle = document.getElementById('modeToggle');
+const animationSelector = document.getElementById('animationSelector');
+
+let animationType = 'rotate';
 
 init();
 animate();
@@ -32,6 +37,26 @@ function init() {
         createText(value || 'Type Here!');
     });
 
+    // Handle color changes
+    colorPicker.addEventListener('input', function (e) {
+        if (textMaterial) {
+            textMaterial.color.set(e.target.value);
+        }
+    });
+
+    // Handle mode toggle
+    modeToggle.addEventListener('click', function () {
+        document.body.classList.toggle('light-mode');
+        modeToggle.textContent = document.body.classList.contains('light-mode') 
+            ? 'Switch to Dark Mode' 
+            : 'Switch to Light Mode';
+    });
+
+    // Handle animation changes
+    animationSelector.addEventListener('change', function (e) {
+        animationType = e.target.value;
+    });
+
     window.addEventListener('resize', onWindowResize, false);
 }
 
@@ -52,7 +77,7 @@ function createText(text) {
         bevelSegments: 5
     });
 
-    const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+    textMaterial = new THREE.MeshBasicMaterial({ color: colorPicker.value });
     textMesh = new THREE.Mesh(textGeometry, textMaterial);
 
     textGeometry.computeBoundingBox();
@@ -71,8 +96,18 @@ function animate() {
     requestAnimationFrame(animate);
 
     if (textMesh) {
-        textMesh.rotation.x += 0.01;
-        textMesh.rotation.y += 0.01;
+        switch (animationType) {
+            case 'rotate':
+                textMesh.rotation.x += 0.01;
+                textMesh.rotation.y += 0.01;
+                break;
+            case 'bounce':
+                textMesh.position.y = Math.sin(Date.now() * 0.005) * 10;
+                break;
+            case 'pulse':
+                textMesh.scale.setScalar(1 + Math.sin(Date.now() * 0.005) * 0.3);
+                break;
+        }
     }
 
     renderer.render(scene, camera);

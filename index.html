@@ -7,6 +7,16 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <div id="controls">
+        <label for="colorPicker">Choose Text Color:</label>
+        <input type="color" id="colorPicker" value="#ffffff">
+        <button id="modeToggle">Switch to Dark Mode</button>
+        <select id="animationSelector">
+            <option value="rotate">Rotate</option>
+            <option value="bounce">Bounce</option>
+            <option value="pulse">Pulse</option>
+        </select>
+    </div>
     <div id="container"></div>
     <input type="text" id="inputText" placeholder="Type something...">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
